@@ -142,36 +142,92 @@ input{
 
 </div>
 
-<!-- BANDERAS -->
+<!-- 145 SIN COSTURA -->
 
-<div id="banderas" class="container screen">
+<div id="bandera145sin" class="container screen">
 
-<button class="back-btn" onclick="volverInicio()">
+<button class="back-btn" onclick="abrirPantalla('banderas')">
 ← Volver
 </button>
 
-<div class="card">
-🚩 145 Sin Costura
+<h2>🚩 145 Sin Costura</h2>
+
+<label>Largo (mts)</label>
+<input type="number" id="largo145sin" step="0.01">
+
+<button class="boton" onclick="calcular145Sin()">
+Calcular
+</button>
+
+<div class="resultado">
+
+<p>Medida:</p>
+<p id="medida145sin">-</p>
+
+<p>Tela Utilizada:</p>
+<p id="tela145sin">-</p>
+
+<div class="total" id="total145sin">
+$0
 </div>
 
-<div class="card">
-🚩 145 Con Costura
-</div>
+<button class="boton" onclick="copiarPresupuesto145Sin()">
+📋 Copiar Presupuesto
+</button>
 
-<div class="card">
-🚩 2.00 mts
-</div>
+<button class="boton" onclick="whatsapp145Sin()">
+📲 Enviar WhatsApp
+</button>
 
-<div class="card">
-🚩 2.90 mts
-</div>
-
-<div class="card">
-🚩 4.30 mts
 </div>
 
 </div>
 
+
+<!-- 145 CON COSTURA -->
+
+<div id="bandera145con" class="container screen">
+
+<button class="back-btn" onclick="abrirPantalla('banderas')">
+← Volver
+</button>
+
+<h2>🚩 145 Con Costura</h2>
+
+<label>Largo (mts)</label>
+<input type="number" id="largo145con" step="0.01">
+
+<button class="boton" onclick="calcular145Con()">
+Calcular
+</button>
+
+<div class="resultado">
+
+<p>Medida:</p>
+<p id="medida145con">-</p>
+
+<p>Tela Utilizada:</p>
+<p id="tela145con">-</p>
+
+<p>Costura:</p>
+<p id="costura145con">-</p>
+
+<div class="total" id="total145con">
+$0
+</div>
+
+<button class="boton" onclick="copiarPresupuesto145Con()">
+📋 Copiar Presupuesto
+</button>
+
+<button class="boton" onclick="whatsapp145Con()">
+📲 Enviar WhatsApp
+</button>
+
+</div>
+
+</div>
+    
 <!-- BANNERS -->
 
 <div id="banners" class="container screen">
