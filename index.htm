@@ -200,37 +200,68 @@ CALCULAR
 </div>
 
 <script>
+const MATERIAL_145 = 13000;
+const DISENO_145 = 12000;
+const EXCEDENTE_145 = 0.50;
 
-function abrir(id){
+function redondear(valor){
 
-    document.querySelectorAll('.container')
-    .forEach(div=>{
-        div.classList.remove('active');
-        div.classList.add('screen');
-    });
+return Math.ceil(valor/1000)*1000;
 
-    document.getElementById(id)
-    .classList.remove('screen');
-
-    document.getElementById(id)
-    .classList.add('active');
 }
 
-function volver(){
+function calcular145Sin(){
 
-    document.querySelectorAll('.container')
-    .forEach(div=>{
-        div.classList.remove('active');
-        div.classList.add('screen');
-    });
+let largo =
+parseFloat(
+document.getElementById("largo145sin").value
+);
 
-    document.getElementById('inicio')
-    .classList.remove('screen');
+if(!largo){
 
-    document.getElementById('inicio')
-    .classList.add('active');
+alert("Ingrese un largo");
+
+return;
+
 }
 
+let tela =
+largo + EXCEDENTE_145;
+
+let total =
+(tela * MATERIAL_145)
++
+DISENO_145;
+
+total =
+redondear(total);
+
+document.getElementById(
+"resultado145sin"
+).innerHTML =
+
+`
+<div class="card">
+
+<p><b>Medida:</b>
+1.45 x ${largo.toFixed(2)}</p>
+
+<p><b>Total:</b>
+$${total.toLocaleString('es-AR')}</p>
+
+<button
+class="back-btn"
+onclick="copiar145Sin(
+'1.45 x ${largo.toFixed(2)}',
+'${total.toLocaleString('es-AR')}'
+)">
+📋 Copiar Presupuesto
+</button>
+
+</div>
+`;
+
+}
 </script>
 
 </body>
