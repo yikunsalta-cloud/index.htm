@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora YIKUN</title>
+<style>
+body{font-family:Arial;background:#00182E;color:#fff;padding:15px}
+.card{background:#fff;color:#000;padding:15px;border-radius:10px;max-width:500px;margin:auto}
+select,input,button{width:100%;padding:10px;margin:6px 0}
+button{background:#ACEC00;border:0;font-weight:bold}
+#res{margin-top:10px;font-size:22px}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>📋 Calculadora YIKUN</h2>
+
+<select id="tipo" onchange="campos()">
+<option value="145sin">Bandera 145 Sin Costura</option>
+<option value="145con">Bandera 145 Con Costura</option>
+<option value="200">Bandera 2.00</option>
+<option value="290">Bandera 2.90</option>
+<option value="430">Bandera 4.30</option>
+<option value="banner">Banner</option>
+<option value="luminoso">Banner Luminoso</option>
+<option value="vinilo">Vinilo</option>
+<option value="afiche">Afiche</option>
+</select>
+
+<div id="largoBox">
+<label>Largo</label>
+<input id="largo" type="number" step="0.01">
+</div>
+
+<div id="anchoBox" style="display:none">
+<label>Ancho</label>
+<input id="ancho" type="number" step="0.01">
+<label>Alto</label>
+<input id="alto" type="number" step="0.01">
+</div>
+
+<button onclick="calcular()">CALCULAR</button>
+<div id="res"></div>
+<button onclick="copiar()">📋 Copiar Presupuesto</button>
+<button onclick="wa()">📲 WhatsApp</button>
+</div>
+
+<script>
+const CFG={
+'145sin':{e:.5,m:13000,d:12000,n:'Bandera 145 Sin Costura'},
+'145con':{e:.5,m:13000,d:12000,c:3000,n:'Bandera 145 Con Costura'},
+'200':{e:.2,m:13000,d:12000,c:3000,p:2,a:2.90,u:1,n:'Bandera 2.00'},
+'290':{e:.5,m:13000,d:12000,c:3000,p:2,a:2.90,u:1,n:'Bandera 2.90'},
+'430':{e:.8,m:13000,d:12000,c:3000,p:3,a:4.30,u:2,n:'Bandera 4.30'},
+'banner':{e:.5,m:12000,d:12000,n:'Banner'},
+'luminoso':{e:.2,m:20000,d:12000,n:'Banner Luminoso'},
+'vinilo':{e:.2,m:12000,d:12000,n:'Vinilo'},
+'afiche':{e:.2,m:9500,d:12000,n:'Afiche'}
+};
+let texto='';
+
+function campos(){
+ let t=tipo.value;
+ let b=['banner','luminoso','vinilo','afiche'].includes(t);
+ anchoBox.style.display=b?'block':'none';
+ largoBox.style.display=b?'none':'block';
+}
+
+function r(v){return Math.ceil(v/1000)*1000}
+
+function calcular(){
+ let t=tipo.value,c=CFG[t],total=0,med='';
+ if(['banner','luminoso','vinilo','afiche'].includes(t)){
+  let a=+ancho.value,h=+alto.value;
+  let m=(a*h)+c.e;
+  total=r((m*c.m)+c.d);
+  med=a.toFixed(2)+' x '+h.toFixed(2);
+ }else{
+  let l=+largo.value;
+  let tela=((c.p||1)*l)+c.e;
+  total=(tela*c.m)+c.d;
+  if(c.c){
+   let ancho=c.a||1.45;
+   let un=c.u||0;
+   let cost=((l*2)+(ancho*2)+(un*l))*c.c;
+   total+=cost;
+   med=ancho.toFixed(2)+' x '+l.toFixed(2);
+  }else{
+   med='1.45 x '+l.toFixed(2);
+  }
+  total=r(total);
+ }
+ res.innerHTML='<b>Total: $'+total.toLocaleString('es-AR')+'</b>';
+ texto='📋 *PRESUPUESTO YIKUN* 📋\n\n📦 *PEDIDO:* '+c.n+'\n\n📐 *MEDIDA:* '+med+'\n\n💰 *TOTAL:* $'+total.toLocaleString('es-AR')+'\n\n⚠️ *PRESUPUESTO VÁLIDO 7 DÍAS* ⚠️';
+}
+function copiar(){navigator.clipboard.writeText(texto);alert('Copiado');}
+function wa(){window.open('https://wa.me/?text='+encodeURIComponent(texto));}
+</script>
+</body>
+</html>
