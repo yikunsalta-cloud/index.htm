@@ -102,14 +102,44 @@ header{
 </div>
 
 <div id="banderas" class="container screen">
+<div id="calc145sin" class="container screen">
 
+<button class="back-btn" onclick="abrir('banderas')">
+← Volver
+</button>
+
+<h2>🚩 145 Sin Costura</h2>
+
+<br>
+
+<label>Largo (mts)</label>
+
+<input
+type="number"
+id="largo145sin"
+step="0.01"
+style="width:100%;padding:12px;border-radius:10px;">
+
+<br><br>
+
+<button
+class="back-btn"
+onclick="calcular145Sin()">
+
+CALCULAR
+
+</button>
+
+<div id="resultado145sin"></div>
+
+</div>
     <button class="back-btn" onclick="volver()">
         ← Volver
     </button>
 
-    <div class="card">
-        🚩 145 Sin Costura
-    </div>
+  <div class="card" onclick="abrir('calc145sin')">
+🚩 145 Sin Costura
+</div>
 
     <div class="card">
         🚩 145 Con Costura
