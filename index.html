@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora YIKUN</title>
+<style>
+:root{--azul:#00182E;--verde:#ACEC00;--blanco:#fff;--negro:#111}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(160deg,var(--azul),#00294d);color:var(--blanco);padding:18px;min-height:100vh}
+.card{background:var(--blanco);color:var(--negro);padding:18px;border-radius:22px;max-width:520px;margin:auto;box-shadow:0 18px 45px rgba(0,0,0,.35)}
+.header{background:var(--azul);color:var(--blanco);border-radius:18px;padding:18px;margin-bottom:14px;text-align:center}
+h2{margin:0;font-size:25px}.sub{margin:6px 0 0;opacity:.85;font-size:14px}
+.box{background:#f4f4f4;border:1px solid #ddd;border-radius:16px;padding:12px;margin:10px 0}
+label{display:block;font-weight:bold;font-size:14px;margin:4px 0}
+select,input,button{width:100%;padding:13px;margin:6px 0;border-radius:12px;font-size:16px}
+select,input{border:1px solid #cfcfcf;background:#fff}input:focus,select:focus{outline:2px solid var(--verde)}
+button{background:var(--verde);border:0;font-weight:bold;cursor:pointer;color:#000;box-shadow:0 7px 0 #7fad00;transition:.1s}
+button:active{transform:translateY(4px);box-shadow:0 3px 0 #7fad00}.sec{background:var(--azul);color:#fff;box-shadow:none;margin-top:4px}
+#res{margin:14px 0;padding:16px;border-radius:16px;background:var(--azul);color:var(--verde);font-size:28px;font-weight:bold;text-align:center;min-height:64px;display:flex;align-items:center;justify-content:center}
+.hide{display:none}.small{font-size:12px;color:#555;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header"><h2>📋 Calculadora YIKUN</h2><p class="sub">Presupuestos rápidos</p></div>
+
+  <div class="box">
+    <label>Tipo de pedido</label>
+    <select id="tipo" onchange="campos()">
+      <option value="145sin">Bandera 1.45 Sin Costura</option>
+      <option value="145con">Bandera 1.45 Con Costura</option>
+      <option value="grandes">Banderas Grandes</option>
+      <option value="banner">Banner</option>
+      <option value="luminoso">Banner Luminoso</option>
+      <option value="vinilo">Vinilo</option>
+      <option value="afiche">Afiche</option>
+    </select>
+
+    <div id="grandesBox" class="hide">
+      <label>Medida de bandera grande</label>
+      <select id="medGrande">
+        <option value="200">Bandera 2.00</option>
+        <option value="290">Bandera 2.90</option>
+        <option value="430">Bandera 4.30</option>
+      </select>
+    </div>
+
+    <div id="largoBox">
+      <label>Largo</label>
+      <input id="largo" type="number" step="0.01" placeholder="Ej: 5">
+    </div>
+
+    <div id="anchoBox" class="hide">
+      <label>Ancho</label>
+      <input id="ancho" type="number" step="0.01" placeholder="Ej: 1.45">
+      <label>Alto</label>
+      <input id="alto" type="number" step="0.01" placeholder="Ej: 2">
+    </div>
+  </div>
+
+  <button onclick="calcular()">CALCULAR</button>
+  <div id="res">$0</div>
+  <button class="sec" onclick="copiar()">📋 Copiar Presupuesto</button>
+  <button class="sec" onclick="wa()">📲 WhatsApp</button>
+  <p class="small">Presupuesto válido 7 días</p>
+</div>
+
+<script>
+const CFG={
+ '145sin':{e:.5,m:13000,d:12000,n:'Bandera 1.45 Sin Costura',ancho:1.45},
+ '145con':{e:.5,m:13000,d:12000,c:3000,n:'Bandera 1.45 Con Costura',ancho:1.45,panos:1,laterales:2,uniones:0},
+ '200':{e:.2,m:13000,d:12000,c:3000,n:'Bandera 2.00',ancho:2.00,panos:2,laterales:4,uniones:1},
+ '290':{e:.5,m:13000,d:12000,c:3000,n:'Bandera 2.90',ancho:2.90,panos:2,laterales:4,uniones:1},
+ '430':{e:.8,m:13000,d:12000,c:3000,n:'Bandera 4.30',ancho:4.30,panos:3,laterales:6,uniones:2},
+ 'banner':{e:.5,m:12000,d:12000,n:'Banner'},
+ 'luminoso':{e:.2,m:20000,d:12000,n:'Banner Luminoso'},
+ 'vinilo':{e:.2,m:12000,d:12000,n:'Vinilo'},
+ 'afiche':{e:.2,m:9500,d:12000,n:'Afiche'}
+};
+let texto='';
+function campos(){
+ let t=tipo.value, medida=['banner','luminoso','vinilo','afiche'].includes(t);
+ anchoBox.className=medida?'':'hide'; largoBox.className=medida?'hide':''; grandesBox.className=t=='grandes'?'':'hide';
+ res.innerHTML='$0'; texto='';
+}
+function r(v){return Math.ceil(v/1000)*1000}
+function money(v){return v.toLocaleString('es-AR')}
+function calcular(){
+ let t=tipo.value=='grandes'?medGrande.value:tipo.value, c=CFG[t], total=0, med='';
+ if(['banner','luminoso','vinilo','afiche'].includes(t)){
+  let a=+ancho.value,h=+alto.value;if(!a||!h){res.innerHTML='Completar medidas';return}
+  total=r((((a*h)+c.e)*c.m)+c.d); med=a.toFixed(2)+' x '+h.toFixed(2);
+ }else{
+  let l=+largo.value;if(!l){res.innerHTML='Completar largo';return}
+  let tela=((l*c.panos)||l)+c.e, cost=0;
+  total=(tela*c.m)+c.d;
+  if(c.c){cost=((1.45*c.laterales)+(l*c.uniones)+(l*2)+c.e)*c.c;total+=cost}
+  total=r(total); med=c.ancho.toFixed(2)+' x '+l.toFixed(2);
+ }
+ res.innerHTML='$'+money(total);
+ texto='📋 *PRESUPUESTO YIKUN* 📋\n\n📦 *PEDIDO:* '+c.n+'\n\n📐 *MEDIDA:* '+med+'\n\n💰 *TOTAL:* $'+money(total)+'\n\n⚠️ *PRESUPUESTO VÁLIDO 7 DÍAS* ⚠️';
+}
+function copiar(){if(!texto){alert('Primero calculá un presupuesto.');return}navigator.clipboard.writeText(texto);alert('Copiado')}
+function wa(){if(!texto){alert('Primero calculá un presupuesto.');return}window.open('https://wa.me/?text='+encodeURIComponent(texto))}
+</script>
+</body>
+</html>
