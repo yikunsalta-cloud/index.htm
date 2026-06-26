@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora YIKUN</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#00182E;color:#fff;min-height:100vh;padding:18px}
+.app{max-width:520px;margin:auto;background:#fff;color:#111;border-radius:24px;overflow:hidden;box-shadow:0 18px 45px #0008}
+.head{background:#00182E;color:#fff;text-align:center;padding:26px 18px 34px;position:relative}
+.logo{width:70px;height:70px;margin:auto;border-radius:18px;background:#ACEC00;display:grid;place-items:center;font-size:34px;box-shadow:0 10px 25px #0006}
+h1{font-size:28px;margin:14px 0 4px;letter-spacing:.5px}
+.sub{opacity:.85;font-size:14px;margin:0}
+.body{padding:20px;margin-top:-18px;background:#fff;border-radius:24px 24px 0 0;position:relative}
+.panel{background:#f6f7f8;border:1px solid #e6e6e6;border-radius:18px;padding:14px;margin-bottom:14px}
+label{display:block;font-weight:bold;font-size:13px;margin:0 0 6px;color:#00182E}
+select,input{width:100%;padding:14px 13px;margin:0 0 12px;border:1px solid #d5d5d5;border-radius:13px;background:#fff;font-size:16px;outline:none}
+select:focus,input:focus{border-color:#ACEC00;box-shadow:0 0 0 3px #ACEC0044}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{width:100%;border:0;border-radius:15px;padding:15px 12px;margin:7px 0;font-weight:bold;font-size:16px;cursor:pointer}
+.primary{background:#ACEC00;color:#00182E;box-shadow:0 8px 18px #acec0044}
+.secondary{background:#00182E;color:#fff}
+.ghost{background:#eef1f4;color:#00182E}
+#res{display:none;text-align:center;margin:14px 0;padding:18px;border-radius:18px;background:#00182E;color:#fff}
+#res .small{font-size:13px;opacity:.8;margin-bottom:3px}
+#res .total{font-size:34px;font-weight:900;letter-spacing:.5px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{text-align:center;font-size:12px;color:#666;margin-top:10px}
+@media(max-width:420px){body{padding:10px}.row,.actions{grid-template-columns:1fr}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="head">
+    <div class="logo">📋</div>
+    <h1>Calculadora YIKUN</h1>
+    <p class="sub">Presupuestos rápidos</p>
+  </div>
+
+  <div class="body">
+    <div class="panel">
+      <label>Tipo de trabajo</label>
+      <select id="tipo" onchange="campos()">
+        <option value="145sin">Bandera 145 Sin Costura</option>
+        <option value="145con">Bandera 145 Con Costura</option>
+        <option value="200">Bandera 2.00</option>
+        <option value="290">Bandera 2.90</option>
+        <option value="430">Bandera 4.30</option>
+        <option value="banner">Banner</option>
+        <option value="luminoso">Banner Luminoso</option>
+        <option value="vinilo">Vinilo</option>
+        <option value="afiche">Afiche</option>
+      </select>
+
+      <div id="largoBox">
+        <label>Largo</label>
+        <input id="largo" type="number" step="0.01" placeholder="Ej: 5">
+      </div>
+
+      <div id="anchoBox" style="display:none">
+        <div class="row">
+          <div>
+            <label>Ancho</label>
+            <input id="ancho" type="number" step="0.01" placeholder="Ej: 1.45">
+          </div>
+          <div>
+            <label>Alto</label>
+            <input id="alto" type="number" step="0.01" placeholder="Ej: 2">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="primary" onclick="calcular()">CALCULAR</button>
+
+    <div id="res">
+      <div class="small">Total</div>
+      <div class="total" id="totalTxt">$0</div>
+    </div>
+
+    <div class="actions">
+      <button class="ghost" onclick="copiar()">📋 Copiar Presupuesto</button>
+      <button class="secondary" onclick="wa()">📲 WhatsApp</button>
+    </div>
+
+    <div class="note">Presupuesto válido por 7 días</div>
+  </div>
+</div>
+
+<script>
+const CFG={
+ '145sin':{e:.5,m:13000,d:12000,panos:1,ancho:1.45,n:'Bandera 145 Sin Costura'},
+ '145con':{e:.5,m:13000,d:12000,c:3000,panos:1,ancho:1.45,n:'Bandera 145 Con Costura'},
+ '200':{e:.2,m:13000,d:12000,c:3000,panos:2,ancho:2.00,n:'Bandera 2.00'},
+ '290':{e:.5,m:13000,d:12000,c:3000,panos:2,ancho:2.90,n:'Bandera 2.90'},
+ '430':{e:.8,m:13000,d:12000,c:3000,panos:3,ancho:4.30,n:'Bandera 4.30'},
+ 'banner':{e:.5,m:12000,d:12000,n:'Banner'},
+ 'luminoso':{e:.2,m:20000,d:12000,n:'Banner Luminoso'},
+ 'vinilo':{e:.2,m:12000,d:12000,n:'Vinilo'},
+ 'afiche':{e:.2,m:9500,d:12000,n:'Afiche'}
+};
+let texto='';
+function campos(){
+ let t=tipo.value,b=['banner','luminoso','vinilo','afiche'].includes(t);
+ anchoBox.style.display=b?'block':'none';
+ largoBox.style.display=b?'none':'block';
+ res.style.display='none';texto='';
+}
+function r(v){return Math.ceil(v/1000)*1000}
+function moneda(v){return v.toLocaleString('es-AR')}
+function calcular(){
+ let t=tipo.value,c=CFG[t],total=0,med='';
+ if(['banner','luminoso','vinilo','afiche'].includes(t)){
+  let a=parseFloat(ancho.value),h=parseFloat(alto.value);
+  if(!a||!h){alert('Ingresá ancho y alto.');return}
+  total=r(((a*h)+c.e)*c.m+c.d);
+  med=a.toFixed(2)+' x '+h.toFixed(2);
+ }else{
+  let l=parseFloat(largo.value);
+  if(!l){alert('Ingresá el largo.');return}
+  let largoEx=l+c.e;
+  total=(largoEx*c.panos*c.m)+c.d;
+  if(c.c){
+   let laterales=c.panos*2*1.45;
+   let metrosCostura=(largoEx*2)+laterales;
+   total+=metrosCostura*c.c;
+  }
+  total=r(total);
+  med=c.ancho.toFixed(2)+' x '+l.toFixed(2);
+ }
+ totalTxt.innerHTML='$'+moneda(total);
+ res.style.display='block';
+ texto='📋 *PRESUPUESTO YIKUN* 📋\n\n📦 *PEDIDO:* '+c.n+'\n\n📐 *MEDIDA:* '+med+'\n\n💰 *TOTAL:* $'+moneda(total)+'\n\n⚠️ *PRESUPUESTO VÁLIDO 7 DÍAS* ⚠️';
+}
+function copiar(){if(!texto){alert('Primero calculá un presupuesto.');return}navigator.clipboard.writeText(texto);alert('Copiado')}
+function wa(){if(!texto){alert('Primero calculá un presupuesto.');return}window.open('https://wa.me/?text='+encodeURIComponent(texto))}
+</script>
+</body>
+</html>
